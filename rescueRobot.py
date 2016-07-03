@@ -16,6 +16,26 @@ ENCODER_KP = 1
 ENCODER_KI = 0
 ENCODER_KD = 0
 
+LINE_TRACKER_KP = 0
+LINE_TRACKER_KI = 0
+LINE_TRACKER_KD = 0
+
+LINE_TRACKER_RED = -1
+LINE_TRACKER_WHITE = -1
+LINE_TRACKER_BLACK = -1
+
+# Follow a line
+def followLine(speed, lineColor, backgroundColor, stopCondition) {
+	lightPID = PID((lineColor + backgroundColor) / 2, LINE_TRACKER_KP, LINE_TRACKER_KI, LINE_TRACKER_KD)
+	while (not stopCondition()):
+		turningAmount = lightPID.update(LINE_TRACKER.colorSensorNXT())
+		LEFT_MOTOR.setSpeed(-speed + turningAmount)
+		RIGHT_MOTOR.setSpeed(-speed - turningAmount)
+
+	LEFT_MOTOR.brake()
+	RIGHT_MOTOR.brake()
+}
+
 # Turn the robot by a certain number of degrees
 def turnRobot(deg, speed, clockwise):
 	LEFT_MOTOR.resetPos()

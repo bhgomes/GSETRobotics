@@ -235,6 +235,18 @@ def set_motor_speed(**motors):
 
 # END ACTIONS #
 
+# MACROS #
+
+def constrain(value, low, high):
+    if (value < low):
+        return low
+    elif (value > high):
+        return high
+    else
+        return value
+
+# END MACROS # 
+
 # TESTS #
 
 def test_sensor_value():
