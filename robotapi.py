@@ -208,6 +208,9 @@ def set_motor_speed(**motors):
 
 # TESTS #
 
+def test_sensor_value():
+    syncprint(S3.lightSensorNXT(True))
+
 def rotation_test(left, right, speed=50, parallel=True):
     ''' ROTATION TEST spins the robot at a default of 50 power '''
     set_motor_speed(left=speed, right=(-speed if parallel else speed))
