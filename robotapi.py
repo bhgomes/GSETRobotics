@@ -2,6 +2,7 @@
 # by bhgomes
 
 from PiStorms import PiStorms
+from functools import wraps
 from time import sleep
 
 psm = PiStorms()
@@ -38,6 +39,7 @@ STOP = psm.isKeyPressed
 
 def whileloop(condition, exit_function, *ars, **kwars):
     def inner_decorator(function):
+        @wraps(function)
         def looping(*args, **kwargs):
             while True:
                 function(*args, **kwargs)
@@ -47,15 +49,43 @@ def whileloop(condition, exit_function, *ars, **kwars):
         return looping
     return inner_decorator
 
+def repeat(n):
+    def inner_decorator(function):
+        @wraps(function)
+        def looping(*args, **kwargs):
+            for i in range(n):
+                function(*args, **kwargs)
+        return looping
+    return inner_decorator
+
+def irepeat(start, end):
+    def inner_decorator(function):
+        @wraps(function)
+        def looping(*args, **kwargs):
+            for i in range(start, end):
+                function(i, *args, **kwargs)
+        return looping
+    return inner_decorator
+
 # END CONTROL STRUCTURES #
 
-def safe_exit(msg):
-    AM[0].brakeSync()
-    BM[0].brakeSync()
+# ACTIONS #
+
+def unsafe_exit(msg):
     SCREEN.clearScreen()
     SCREEN.termPrintln("\n" + msg)
     psm.led(1,0,0,0)
     sleep(0.5)
+
+def safe_exit(msg):
+    AM[0].brakeSync()
+    BM[0].brakeSync()
+    unsafe_exit(msg)
+
+def follow_line(left, right, sensor):
+    return
+
+# END ACTIONS #
 
 # TESTS #
 
@@ -69,6 +99,9 @@ def tests():
 
 # END TESTS #
 
-# ACTIONS #
+# MAIN #
 
-# END ACTIONS #
+if __name__ == "__main__":
+    print(2)
+
+# END MAIN #
