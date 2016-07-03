@@ -124,6 +124,12 @@ def timer(t, dt):
         return __timer
     return timer_decorator
 
+def threadable(function):
+    @wraps(funcion)
+    def __threadable(*args, **kwargs):
+        return Thread(target=function)
+    return __threadable
+
 def sleeper(dt):
     ''' '''
     def sleeper_decorator(function):
@@ -204,9 +210,10 @@ def syncprint(msg):
 def neutral_exit(msg):
     ''' NEUTRAL EXIT does not care about the motor '''
     SCREEN.clearScreen()
-    syncprint("\n" + msg)
+    syncprint(msg)
     PSM.led(1, 0, 0, 0)
     sleep(0.5)
+    SCREEN.refresh()
 
 def safe_exit(msg):
     ''' SAFE EXIT floats the engine '''
