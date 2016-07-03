@@ -50,7 +50,7 @@ class PID(object):
         self.iterm += err * dt
         self.dterm  = de  / dt
 
-        self.output = (self.Kp * self.pterm) + (self.Ki * self.iterm) + (self.Kd * self.dterm)
+        self.output = (self.Kp * self.pterm) + (self.Ki * self.iterm) - (self.Kd * self.dterm)
 
         return self.output
 
