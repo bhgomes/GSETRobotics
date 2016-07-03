@@ -38,7 +38,7 @@ STOP = psm.isKeyPressed
 # CONTROL STRUCTURES #
 
 def whileloop(condition, exit_function, *ars, **kwars):
-    def inner_decorator(function):
+    def whileloop_decorator(function):
         @wraps(function)
         def looping(*args, **kwargs):
             while True:
@@ -47,25 +47,25 @@ def whileloop(condition, exit_function, *ars, **kwars):
                     exit_function(*ars, **kwars)
                     break
         return looping
-    return inner_decorator
+    return whileloop_decorator
 
 def repeat(n):
-    def inner_decorator(function):
+    def repeat_decorator(function):
         @wraps(function)
         def looping(*args, **kwargs):
             for i in range(n):
                 function(*args, **kwargs)
         return looping
-    return inner_decorator
+    return repeat_decorator
 
 def irepeat(start, end):
-    def inner_decorator(function):
+    def irepeat_decorator(function):
         @wraps(function)
         def looping(*args, **kwargs):
             for i in range(start, end):
                 function(i, *args, **kwargs)
         return looping
-    return inner_decorator
+    return irepeat_decorator
 
 # END CONTROL STRUCTURES #
 
@@ -81,6 +81,10 @@ def safe_exit(msg):
     AM[0].brakeSync()
     BM[0].brakeSync()
     unsafe_exit(msg)
+    
+def set_motor_speed(**motors):
+    for motor, speed in motors:
+        motor.setSpeed(speed)       # non-ideal version of the system, allows for setspeed to not be synchronized
 
 def follow_line(left, right, sensor):
     return
@@ -89,19 +93,18 @@ def follow_line(left, right, sensor):
 
 # TESTS #
 
-def rotation_test(speed):
-    M1.setSpeed(speed)
-    M2.setSpeed(-speed)
+def rotation_test(left, right, speed):
+    set_motor_speed(left=speed, right=-speed)
 
 @whileloop(STOP, safe_exit, "Exiting Tests")
 def tests():
-    rotation_test(50)
+    rotation_test(M1, M2, 50)
 
 # END TESTS #
 
 # MAIN #
 
 if __name__ == "__main__":
-    print(2)
+    print("main does not exist")
 
 # END MAIN #
