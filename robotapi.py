@@ -1,42 +1,58 @@
 # ROBOT API for GSET Robotics Competition
 # by bhgomes
 
-from PiStorms import PiStorms
+import sys
+import time
+import getopt
 
 from functools import wraps
 from time import sleep
 
-import sys
+from PiStorms import PiStorms
 
-PSM = PiStorms()
+################################################################################
+############################# ABSTRACT STRUCTURES ##############################
+################################################################################
 
-SCREEN = PSM.screen
+# CLASSES #
 
-M1 = PSM.BAM1
-M2 = PSM.BAM2
-AM = (M1, M2)
+class PID(object):
+    def __init__(self, setpoint, Kp, Ki, Kd):
+        self.setpoint   = setpoint
+        self.Kp         = Kp
+        self.Ki         = Ki
+        self.Kd         = Kd
+        self.last_time  = 0
+        self.last_error = 0
+        self.output     = 0
+        self.pterm      = 0
+        self.iterm      = 0
+        self.dterm      = 0
 
-M3 = PSM.BBM1
-M4 = PSM.BBM2
-BM = (M3, M4)
+    def error(self, feedback):
+        return self.setpoint - feedback
 
-ML = AM + BM
+    def update(self, feedback):
+        tim = time.time()
+        err = self.error(feedback)
 
-S1 = PSM.BAS1
-S2 = PSM.BAS2
-AS = (S1, S2)
+        dt = tim - self.last_time
+        de = err - self.last_error
 
-S3 = PSM.BBS1
-S4 = PSM.BBS2
-BS = (S3, S4)
+        self.last_time  = tim
+        self.last_error = err
 
-SL = AS + BS
+        self.pterm  = err
+        self.iterm += err * dt
+        self.dterm  = de  / dt
 
-BA = (AM, AS)
-BB = (BM, BS)
+        self.output = (self.Kp * self.pterm) +
+                      (self.Ki * self.iterm) +
+                      (self.Kd * self.dterm)
 
-GO   = PSM.isKeyPressed
-STOP = PSM.isKeyPressed
+        return self.output
+
+# END CLASSES #
 
 # CONTROL STRUCTURES #
 
@@ -79,15 +95,69 @@ def irepeat(start, end):
         return __looping
     return irepeat_decorator
 
+def timer(t, dt):
+    ''' '''
+    def timer_decorator(function):
+        ''' '''
+        @wraps(function)
+        def __timer(*args, **kwargs):
+            ''' '''
+            b = t()
+            v = function(*args, **kwargs)
+            return ((t() - b) * dt, v)
+        return __timer
+    return timer_decorator
+
 def sleeper(dt):
+    ''' '''
     def sleeper_decorator(function):
+        ''' '''
         @wraps(function)
         def __sleeper(*args, **kwargs):
+            ''' '''
             return
         return __sleeper
     return sleeper_decorator
 
 # END CONTROL STRUCTURES #
+
+################################################################################
+############################# PISTORMS STRUCTURES ##############################
+################################################################################
+
+# CONSTANTS #
+
+PSM = PiStorms()
+
+SCREEN = PSM.screen
+
+M1   = PSM.BAM1
+M2   = PSM.BAM2
+AM   = (M1, M2)
+
+M3   = PSM.BBM1
+M4   = PSM.BBM2
+BM   = (M3, M4)
+
+ML   = AM + BM
+
+S1   = PSM.BAS1
+S2   = PSM.BAS2
+AS   = (S1, S2)
+
+S3   = PSM.BBS1
+S4   = PSM.BBS2
+BS   = (S3, S4)
+
+SL   = AS + BS
+
+BA   = (AM, AS)
+BB   = (BM, BS)
+
+GO   = PSM.isKeyPressed
+STOP = PSM.isKeyPressed
+
+# END CONSTANTS #
 
 # ACTIONS #
 
@@ -138,22 +208,36 @@ def tests():
 
 # MAIN #
 
-if __name__ == "__main__":
+def main():
     ''' MAIN runs tests and calibrates the robot '''
-    ARGV = sys.argv
-    ARGL = len(ARGV)
+
+    """
+    try:
+        opts, args = getopt.getopt(args, "a:b:c:defg",
+                                   ["a=", "b=", "c=",
+                                    "d", "e", "f", "g"])
+    except getopt.error, err:
+        print err
+        print "use -h/--help for command line help"
+        return 2
+
+    for o, a in opts:
+        if o in (,):
+
+        if o in (,):
+
+        if o in (,):
+
+        if o in (,):
+
+        if o in ("-h", "--help"):
+            print (__doc__)
+            return 0
+    """
 
     syncprint("< PiStorms Robotic System >")
 
-    if ARGL == 1:
-        syncprint("running tests: ")
-    elif ARGL == 2:
-        pass
-    elif ARGL == 3:
-        pass
-    elif ARGL == 4:
-        pass
-    else:
-        pass
+if __name__ == "__main__":
+    sys.exit(main())
 
 # END MAIN #
