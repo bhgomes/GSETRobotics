@@ -11,6 +11,7 @@ import numpy as np
 from time import sleep
 
 from PiStorms import PiStorms
+from mindsensors_i2c import mindsensors_i2c
 
 ################################################################################
 ############################# ABSTRACT STRUCTURES ##############################
@@ -79,7 +80,7 @@ def whileloop(condition, exit_function, *ars, **kwars):
             ''' '''
             while True:
                 function(*args, **kwargs)
-                if condition:
+                if condition(*args, **kwargs):
                     exit_function(*ars, **kwars)
                     break
         return __looping
@@ -138,6 +139,26 @@ def sleeper(dt):
 ################################################################################
 ############################# PISTORMS STRUCTURES ##############################
 ################################################################################
+
+# CLASSES #
+
+class HiTechnicColorV2(mindsensors_i2c):
+    Color_ADDRESS = (0x02)
+    Color_COMMAND = (0x41)
+
+    def __init__(self, color_address = Color_ADDRESS):
+        mindsensors_i2c.__init__(self, color_address >> 1)
+
+    def get_colornum(self):
+        try:
+            return (self.readIntegerBE(self.Color_COMMAND))
+        except:
+            print("Error: Could not read color")
+            return ""
+
+HC = HiTechnicColorV2()
+
+# END CLASSES #
 
 # CONSTANTS #
 
@@ -215,7 +236,7 @@ def rotation_test(left, right, speed=50, parallel=True):
     ''' ROTATION TEST spins the robot at a default of 50 power '''
     set_motor_speed(left=speed, right=(-speed if parallel else speed))
 
-@whileloop(STOP, safe_exit, "Exiting Tests")
+@whileloop(STOP(), safe_exit, "Exiting Tests")
 @sleeper(0.25)
 def tests():
     ''' TESTS is a testing suite for the robotapi '''
