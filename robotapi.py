@@ -9,6 +9,7 @@ import getopt
 from functools import wraps
 import numpy as np
 from time import sleep
+from threading import Thread
 
 from PiStorms import PiStorms
 from mindsensors_i2c import mindsensors_i2c
