@@ -83,7 +83,7 @@ def safe_exit(msg):
     unsafe_exit(msg)
     
 def set_motor_speed(**motors):
-    for motor, speed in motors:
+    for motor, speed in motors.iteritems():
         motor.setSpeed(speed)       # non-ideal version of the system, allows for setspeed to not be synchronized
 
 def follow_line(left, right, sensor):
