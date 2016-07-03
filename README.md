@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # PiStorms
 
 To install and run this repo on your Pi,<br>
@@ -26,3 +27,7 @@ As a next step, follow the examples from PiStorms/programs folder.
 
 To write your own programs, start with a tutorial here: http://www.mindsensors.com/blog/how-to/pistorms-python-programming-tutorial<br>
 and then refer to online API reference here: http://www.mindsensors.com/reference/PiStorms/html/
+=======
+# GSETRobotics
+Robotics Team: Brandon, Kapil, Marc, Andrew
+>>>>>>> origin/master
