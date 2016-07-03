@@ -251,6 +251,8 @@ def main():
 
     syncprint("< PiStorms Robotic System >")
 
+    safe_exit("Exit");
+
 if __name__ == "__main__":
     sys.exit(main())
 

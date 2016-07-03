@@ -21,5 +21,5 @@ importer () {
     return "$error_state";
 }
 
-importer "$imported_list" # import the necessary modules
+importer "$import_list" # import the necessary modules
 python robotapi.py        # run tests from robotapi
