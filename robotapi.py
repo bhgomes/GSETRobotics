@@ -1,4 +1,5 @@
 # ROBOT API for GSET Robotics Competition
+# robotapi.py
 # by bhgomes
 
 import sys
@@ -6,6 +7,7 @@ import time
 import getopt
 
 from functools import wraps
+import numpy as np
 from time import sleep
 
 from PiStorms import PiStorms
@@ -46,11 +48,23 @@ class PID(object):
         self.iterm += err * dt
         self.dterm  = de  / dt
 
-        self.output = (self.Kp * self.pterm) +
-                      (self.Ki * self.iterm) +
-                      (self.Kd * self.dterm)
+        self.output = (self.Kp * self.pterm) + (self.Ki * self.iterm) + (self.Kd * self.dterm)
 
         return self.output
+
+class AreaMap(object):
+    def __init__(self):
+        pass
+
+    def __call__(self):
+        pass
+
+class Scanner(object):
+    def __init__(self, amap):
+        self.amap = amap
+
+    def __call__(self):
+        pass
 
 # END CLASSES #
 
